@@ -1,8 +1,4 @@
 #include <iostream>
-#include <cstring>
-//#include <fstream>
-
-//std::ifstream fin("text.in");
 
 class drum
 {
@@ -35,10 +31,9 @@ std::istream& operator>>(std::istream& in, drum& d)
 }
 
 
-
 int main()
 {
-	int drumuri, nin, nout, nodfin;
+	int drumuri, nin, nout, nodfin[10], nodinit, nr;
 	std::string cuv;
 	drum lista[20];
 	bool ok;
@@ -46,21 +41,27 @@ int main()
 	std::cin >> cuv;
 	std::cout << "nr de drumuri: ";
 	std::cin >> drumuri;
-	std::cout << "nodul final: ";
-	std::cin >> nodfin;
+	std::cout << "nodul initial: ";
+	std::cin >> nodinit;
+	std::cout << "nr de noduri finale: ";
+	std::cin >> nr;
+	std::cout << "nodirile: ";
+	for (int i = 0;i < nr;i++)
+	{
+		std::cin >> nodfin[i];
+	}
 
 	std::cout << "nod initial, nod final, litera:"<<std::endl;
 	for (int k = 0;k < drumuri;k++)
 	{
 		std::cin >> lista[k];
 	}
-	//std::cout << cuv.length() << std::endl;
 
 	ok = false;
 	
 	for (int k = 0;k < drumuri;k++)
 	{
-		if (lista[k].getnodin()==0 && cuv[0] == lista[k].getlit())
+		if (lista[k].getnodin()==nodinit && cuv[0] == lista[k].getlit())
 		{
 			ok = true;
 			nout = lista[k].getnodout();
@@ -86,15 +87,15 @@ int main()
 					break;
 				}
 			}
-
-			if (k == cuv.length() - 1 && nout == nodfin)
+			for (int i = 0;i < nr;i++)
 			{
-				ok = true;
-				break;
+				if (k == cuv.length() - 1 && nout == nodfin[i])
+				{
+					ok = true;
+					break;
+				}
 			}
-
 		}
-
 
 		if (ok)
 			std::cout << "cuvantul e acceptat :) ";
@@ -102,7 +103,5 @@ int main()
 			std::cout << "cuvantul nu e acceptat :( ";
 	}
 	
-
-
 	return 0;
 }
