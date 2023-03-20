@@ -1,81 +1,108 @@
 #include <iostream>
+#include <cstring>
 //#include <fstream>
 
 //std::ifstream fin("text.in");
 
+class drum
+{
+	int nodin;
+	int nodout;
+	char litera;
+
+public:
+	friend std::istream& operator>>(std::istream&, drum&);
+
+	int getnodin()
+	{
+		return nodin;
+	}
+	int getnodout()
+	{
+		return nodout;
+	}
+	char getlit()
+	{
+		return litera;
+	}
+
+};
+
+std::istream& operator>>(std::istream& in, drum& d)
+{
+	in >> d.nodin >> d.nodout >> d.litera;
+	return in;
+}
+
+
 
 int main()
 {
-	int drumuri, noduri, i, j, nodfin;
-	std::string cuv, lit, matrice[20][20];
-	std::string var;
-	char c;
+	int drumuri, nin, nout, nodfin;
+	std::string cuv;
+	drum lista[20];
 	bool ok;
 	std::cout << "cuvantul pe care vrem sa il verificam: ";
 	std::cin >> cuv;
 	std::cout << "nr de drumuri: ";
 	std::cin >> drumuri;
-	std::cout << "nr de noduri: ";
-	std::cin >> noduri;
 	std::cout << "nodul final: ";
 	std::cin >> nodfin;
-
-	
-	for (i = 0;i < noduri;i++)
-		for (j = 0;j < noduri;j++)
-			matrice[i][j] = '0';
-	
 
 	std::cout << "nod initial, nod final, litera:"<<std::endl;
 	for (int k = 0;k < drumuri;k++)
 	{
-		std::cin >> i >> j >> lit;
-		matrice[i][j] = lit;
+		std::cin >> lista[k];
 	}
+	//std::cout << cuv.length() << std::endl;
 
-	for (i = 0;i < noduri;i++)
-	{
-		for (j = 0;j < noduri;j++)
-			std::cout << matrice[i][j] << " ";
-		std::cout << std::endl;
-	}
-	
 	ok = false;
 	
-	for (int k = 0;k < noduri;k++)
+	for (int k = 0;k < drumuri;k++)
 	{
-		//var.assign(1, cuv[0]);
-		c = cuv[0];
-		std::string var = std::string(1, cuv[0]);
-		
-		if (var.compare(matrice[0][k][0]) != 0)
+		if (lista[k].getnodin()==0 && cuv[0] == lista[k].getlit())
 		{
-			cuv == matrice[0][j];
 			ok = true;
-			i = 0;
-			j = k;
+			nout = lista[k].getnodout();
 			break;
 		}
 	}
 
 	if (!ok)
-		std::cout << "cuvantul nu e acceptat :(( ";
+		std::cout << "cuvantul nu e acceptat (din prima) :( ";
 	else
 	{
-		ok = false;
 		for (int k = 1;k < cuv.length();k++)
 		{
-			if (k == cuv.length()-1 && j == nodfin)
-				ok = true;
-
-			for (int n = 0;n < noduri;n++)
+			ok = false;
+			for (int n = 0;n < drumuri;n++)
 			{
-				if(matrice[j][n].compare(cuv[i])  
+				if (nout == lista[n].getnodin() && cuv[k] == lista[n].getlit())
+				{
+					//std::cout << "am parcurs litera: " << lista[n].getlit()<<std::endl;
+					//std::cout << "nod final curent: " << lista[n].getnodout() << std::endl;
+					//std::cout << "k=" << k << std::endl;
+					nout = lista[n].getnodout();
+					break;
+				}
 			}
 
+			if (k == cuv.length() - 1 && nout == nodfin)
+			{
+				ok = true;
+				break;
+			}
 
 		}
+
+
+		if (ok)
+			std::cout << "cuvantul e acceptat :) ";
+		else
+			std::cout << "cuvantul nu e acceptat :( ";
 	}
+	
+
 
 	return 0;
 }
