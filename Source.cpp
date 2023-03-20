@@ -1,4 +1,7 @@
 #include <iostream>
+#include <fstream>
+
+std::ifstream fin("text.in");
 
 class drum
 {
@@ -9,15 +12,15 @@ class drum
 public:
 	friend std::istream& operator>>(std::istream&, drum&);
 
-	int getnodin()
+	int getnodin() const
 	{
 		return nodin;
 	}
-	int getnodout()
+	int getnodout() const
 	{
 		return nodout;
 	}
-	char getlit()
+	char getlit() const
 	{
 		return litera;
 	}
@@ -37,70 +40,79 @@ int main()
 	std::string cuv;
 	drum lista[20];
 	bool ok;
-	std::cout << "cuvantul pe care vrem sa il verificam: ";
-	std::cin >> cuv;
-	std::cout << "nr de drumuri: ";
-	std::cin >> drumuri;
-	std::cout << "nodul initial: ";
-	std::cin >> nodinit;
-	std::cout << "nr de noduri finale: ";
-	std::cin >> nr;
-	std::cout << "nodirile: ";
+	//std::cout << "nr de drumuri: ";
+	fin >> drumuri;
+	//std::cout << "nodul initial: ";
+	fin >> nodinit;
+	//std::cout << "nr de noduri finale: ";
+	fin >> nr;
+	//std::cout << "nodirile: ";
 	for (int i = 0;i < nr;i++)
 	{
-		std::cin >> nodfin[i];
+		fin >> nodfin[i];
 	}
 
-	std::cout << "nod initial, nod final, litera:"<<std::endl;
+	//std::cout << "nod initial, nod final, litera:"<<std::endl;
 	for (int k = 0;k < drumuri;k++)
 	{
-		std::cin >> lista[k];
+		fin >> lista[k];
 	}
 
-	ok = false;
-	
-	for (int k = 0;k < drumuri;k++)
+	//std::cout << "cuvantul pe care vrem sa il verificam: ";
+	fin >> cuv;
+
+	if (cuv.length() == 0)
 	{
-		if (lista[k].getnodin()==nodinit && cuv[0] == lista[k].getlit())
+		for (int i = 0;i < nr;i++)
 		{
-			ok = true;
-			nout = lista[k].getnodout();
-			break;
+			if (nodinit == nodfin[i])
+				std::cout << "cuvantul vid e acceptat :) ";
 		}
 	}
-
-	if (!ok)
-		std::cout << "cuvantul nu e acceptat (din prima) :( ";
 	else
 	{
-		for (int k = 1;k < cuv.length();k++)
+		ok = false;
+
+		for (int k = 0;k < drumuri;k++)
 		{
-			ok = false;
-			for (int n = 0;n < drumuri;n++)
+			if (lista[k].getnodin() == nodinit && cuv[0] == lista[k].getlit())
 			{
-				if (nout == lista[n].getnodin() && cuv[k] == lista[n].getlit())
-				{
-					//std::cout << "am parcurs litera: " << lista[n].getlit()<<std::endl;
-					//std::cout << "nod final curent: " << lista[n].getnodout() << std::endl;
-					//std::cout << "k=" << k << std::endl;
-					nout = lista[n].getnodout();
-					break;
-				}
-			}
-			for (int i = 0;i < nr;i++)
-			{
-				if (k == cuv.length() - 1 && nout == nodfin[i])
-				{
-					ok = true;
-					break;
-				}
+				ok = true;
+				nout = lista[k].getnodout();
+				break;
 			}
 		}
 
-		if (ok)
-			std::cout << "cuvantul e acceptat :) ";
+		if (!ok)
+			std::cout << "cuvantul nu e acceptat (din prima) :( ";
 		else
-			std::cout << "cuvantul nu e acceptat :( ";
+		{
+			for (int k = 1;k < cuv.length();k++)
+			{
+				ok = false;
+				for (int n = 0;n < drumuri;n++)
+				{
+					if (nout == lista[n].getnodin() && cuv[k] == lista[n].getlit())
+					{
+						nout = lista[n].getnodout();
+						break;
+					}
+				}
+				for (int i = 0;i < nr;i++)
+				{
+					if (k == cuv.length() - 1 && nout == nodfin[i])
+					{
+						ok = true;
+						break;
+					}
+				}
+			}
+
+			if (ok)
+				std::cout << "cuvantul e acceptat :) ";
+			else
+				std::cout << "cuvantul nu e acceptat :( ";
+		}
 	}
 	
 	return 0;
